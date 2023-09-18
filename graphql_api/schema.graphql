@@ -1,0 +1,118 @@
+# We intentionally left comments in Chinese for LLM to relate fields with the terms in prompt.
+type Character {
+  # Primary key
+  characterPrefabKey: String!
+  
+  name: String!
+
+  description: String!
+
+  tagList: [String!]
+
+  # 位置：高台或地面
+  position: String!
+
+  # 职业
+  profession: String!
+
+  # 职业分支
+  subProfession: String!
+
+  # 可以获得此干员
+  isNotObtainable: Boolean!
+
+  # 稀有度， 星级，范围1 ~6
+  rarity: Int!
+
+  # 职业特性
+  traits: String!
+
+  # 精英等级，范围：未精英（精英0），精英一，精英二
+  phases: [Phase!]
+
+  # 天赋
+  talents: [String!]
+
+  # 每个潜能等级带来的提升
+  potentialRanks: [String!]
+
+  # 每个技能的id,专精需求,解锁条件
+  skills: [Skill!]
+}
+
+# 精英等级
+type Phase {
+  # 属性节点
+  attributesKeyFrames: [AttributesKeyFrame!]
+
+  maxLevel: Int!
+
+  # 到达精英等级所需材料
+  evolveCost: [MaterialCost!]
+}
+
+type AttributesKeyFrame {
+  level: Int!
+  maxHp: Int!
+  atk: Int!
+  physicalDef: Int!
+  magicResistance: Int!
+
+  # 部署费用
+  cost: Int!
+
+  # 攻击间隔（秒）
+  baseAttackTime: Float!
+
+  # 再部署间隔（秒）
+  respawnTime: Int!
+
+  tauntLevel: Int!
+}
+
+type MaterialCost {
+  id: String!
+  count: Int!
+}
+
+type Skill {
+  id: String!
+  proficentRequirement: [ProficentRequirement!]
+  unlockCondition: UnlockCondition!
+}
+
+type UnlockCondition {
+  phase: Int!
+  level: Int!
+}
+
+type ProficentRequirement {
+  unlockCondition: UnlockCondition!
+  # 专精时间（秒）
+  timeCost: Int!
+  materialCost: [MaterialCost!]
+}
+
+input CharacterFilter {
+  name: String
+
+  tagList: [String!]
+
+  # 稀有度， 星级，范围1 ~6
+  rarity: Int
+  
+  # 位置：高台或地面
+  position: String
+
+  # 职业
+  profession: String
+
+  # 职业分支
+  subProfession: String
+}
+
+type Query {
+  character(name: String!): Character
+
+  characters(filter: CharacterFilter!): [Character!]
+}
