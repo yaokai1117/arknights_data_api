@@ -1,17 +1,21 @@
 from data_cleaning import process_data
-from per_table_data_transformation import filename_to_process_func
+from dotenv import load_dotenv
+from per_table_data_cleaning import filename_to_process_func
 
 import json
 import os
+ROOT_PATH = os.path.join(os.path.dirname(__file__), '..')
+
 import pymongo
 
-# Replace with your MongoDB connection details
-MONGODB_URI = ''
+load_dotenv()
+
+MONGODB_URI = os.getenv("MONGODB_URI")
 DATABASE_NAME = 'arknights'
 DATA_DIR_NAME = 'data'
 
 # Directory containing the JSON files
-dirname = os.path.join(os.path.dirname(__file__), f'../{DATA_DIR_NAME}')
+dirname = os.path.join(ROOT_PATH, DATA_DIR_NAME)
 
 # Connect to MongoDB
 client = pymongo.MongoClient(MONGODB_URI)

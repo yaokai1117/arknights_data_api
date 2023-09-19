@@ -1,14 +1,20 @@
 from ariadne import load_schema_from_path, make_executable_schema, ObjectType, InputType
 from ariadne.asgi import GraphQL
 from typing import Any, Dict, List
+from dotenv import load_dotenv
 
-import os
 import pymongo
+import os
+ROOT_PATH = os.path.join(os.path.dirname(__file__), '..')
 
-DataEntry = Dict[str, Any]
+import sys
+sys.path.append(ROOT_PATH)
 
-# Replace with your MongoDB connection details
-MONGODB_URI = ''
+from utils.types import DataEntry
+
+load_dotenv()
+
+MONGODB_URI = os.getenv("MONGODB_URI")
 DATABASE_NAME = 'arknights'
 CHARACTER_TABLE_NAME = 'character_table'
 

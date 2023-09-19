@@ -1,14 +1,18 @@
 import re
-from typing import Union, List, Dict, Any
+import os
+ROOT_PATH = os.path.join(os.path.dirname(__file__), '..')
 
-# Define a type for the blackboard parameter
-BlackboardParam = Dict[str, Union[str, float, None]]
+import sys
+sys.path.append(ROOT_PATH)
+
+from typing import Union, List, Any
+from utils.types import DataEntry, DataList
 
 format_code_map = {
     '0%': '.0%'
 }
 
-def interpolate_string(string: str, param_map: List[BlackboardParam]) -> str:
+def interpolate_string(string: str, param_map: List[DataEntry]) -> str:
     for param in param_map:
         key = param['key']
         value = param['value']
@@ -27,7 +31,7 @@ def interpolate_string(string: str, param_map: List[BlackboardParam]) -> str:
             
     return string
 
-def process_blackboards(obj: Union[Dict[str, Any], List[Union[Dict[str, Any], Any]]]) -> None:
+def process_blackboards(obj: Union[DataEntry, DataList]) -> None:
     if isinstance(obj, dict):
         if 'description' in obj.keys() and 'blackboard' in obj.keys():
             obj['description'] = interpolate_string(obj['description'], obj['blackboard'])
@@ -40,7 +44,7 @@ def process_blackboards(obj: Union[Dict[str, Any], List[Union[Dict[str, Any], An
 def remove_tags(string: str) -> str:
     return re.sub(r'<(@|\$)(\w+)\.(\w+)>(.*?)<\/>', r'\4', string)
 
-def process_tags(obj: Union[Dict[str, Any], List[Union[Dict[str, Any], Any]]]) -> None:
+def process_tags(obj: Union[DataEntry, DataList]) -> None:
     if isinstance(obj, dict):
         for key, value in obj.items():
             if isinstance(value, str):
@@ -52,7 +56,7 @@ def process_tags(obj: Union[Dict[str, Any], List[Union[Dict[str, Any], Any]]]) -
             if isinstance(value, dict):
                 process_tags(value)
 
-def process_data(obj: Union[Dict[str, Any], List[Union[Dict[str, Any], Any]]]) -> None:
+def process_data(obj: Union[DataEntry, DataList]) -> None:
     process_tags(obj)
     process_blackboards(obj)
 

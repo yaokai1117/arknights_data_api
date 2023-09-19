@@ -1,7 +1,12 @@
-from typing import List, Dict, Any, Callable
+from typing import List
 
-DataEntry = Dict[str, Any]
-DataProcessFunction = Callable[[DataEntry], DataEntry]
+import os
+ROOT_PATH = os.path.join(os.path.dirname(__file__), '..')
+
+import sys
+sys.path.append(ROOT_PATH)
+
+from utils.types import DataEntry, DataProcessFunction
 
 def generate_only_keep_userful_fields_func(useful_fields: List[str]) -> DataProcessFunction:
     return lambda data : {key: value for key, value in data.items() if key in useful_fields}
