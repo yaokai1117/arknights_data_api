@@ -5,7 +5,7 @@ ROOT_PATH = os.path.join(os.path.dirname(__file__), '..')
 import sys
 sys.path.append(ROOT_PATH)
 
-from typing import Union, List, Any
+from typing import Union, List
 from utils.types import DataEntry, DataList
 
 format_code_map = {

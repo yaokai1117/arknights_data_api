@@ -22,7 +22,10 @@ client = pymongo.MongoClient(MONGODB_URI)
 db = client[DATABASE_NAME]
 
 # List of JSON file names (without the .json extension)
-json_filenames = ['character_table']  # Add your file names here
+json_filenames = [
+    'character_table',
+    'skill_table'
+    ] 
 
 for filename in json_filenames:
     collection_name = filename
