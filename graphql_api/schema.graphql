@@ -21,11 +21,14 @@ type Character {
   # 可以获得此干员
   isNotObtainable: Boolean!
 
-  # 稀有度， 星级，范围1 ~6
+  # 稀有度， 星级，范围：1 ~6
   rarity: Int!
 
   # 职业特性
   traits: String!
+
+  # 技能 （不包括技能专精需求）
+  skills: [Skill!]
 
   # 精英等级，范围：未精英（精英0），精英一，精英二
   phases: [Phase!]
@@ -36,8 +39,39 @@ type Character {
   # 每个潜能等级带来的提升
   potentialRanks: [String!]
 
-  # 每个技能的id,专精需求,解锁条件
-  skills: [Skill!]
+  # 每个技能的专精需求
+  skillRequirements: [SkillRequirement!]
+}
+
+type Skill {
+  skillId: String!
+
+  skillName: String!
+
+  # 拥有此技能的干员
+  characters: [Character!]
+
+  # 每一级的技能信息 (第8, 9, 10级称为专精1，2，3)
+  levels: [SkillLevel!]
+}
+
+type SkillLevel {
+  description: String!
+  # 技能类型，可以为：自动触发，手动触发，被动技能
+  skillType: String!
+  # 持续类型，可以为：时间，弹药
+  durationType: String!
+  duration: Int!
+
+  # 技能点回复类型，可以为：自动回复，攻击回复，受击回复
+  spType: String!
+  # 开启技能所需消耗SP
+  spCost: Int!
+  # 初始SP，初动
+  initialSp: Int!
+  # 可充能次数
+  maxCharge: Int!
+
 }
 
 # 精英等级
@@ -75,19 +109,12 @@ type MaterialCost {
   count: Int!
 }
 
-type Skill {
+type SkillRequirement {
   id: String!
-  proficentRequirement: [ProficentRequirement!]
-  unlockCondition: UnlockCondition!
+  proficientRequirements: [ProficientRequirement!]
 }
 
-type UnlockCondition {
-  phase: Int!
-  level: Int!
-}
-
-type ProficentRequirement {
-  unlockCondition: UnlockCondition!
+type ProficientRequirement {
   # 专精时间（秒）
   timeCost: Int!
   materialCost: [MaterialCost!]
@@ -112,7 +139,9 @@ input CharacterFilter {
 }
 
 type Query {
-  character(name: String!): Character
-
   characters(filter: CharacterFilter!): [Character!]
+
+  skill(skillName: String, character_name: String): [Skill!]
+
+  skillRequirements(skillName: String, character_name: String): [SkillRequirement!]
 }

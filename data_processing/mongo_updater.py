@@ -1,12 +1,12 @@
-from data_cleaning import process_data
-from dotenv import load_dotenv
-from per_table_data_cleaning import filename_to_process_func
-
 import json
+import pymongo
+
 import os
 ROOT_PATH = os.path.join(os.path.dirname(__file__), '..')
 
-import pymongo
+from data_cleaning import process_data
+from dotenv import load_dotenv
+from per_table_data_cleaning import filename_to_process_func, DataProcessingContext
 
 load_dotenv()
 
@@ -21,11 +21,16 @@ dirname = os.path.join(ROOT_PATH, DATA_DIR_NAME)
 client = pymongo.MongoClient(MONGODB_URI)
 db = client[DATABASE_NAME]
 
-# List of JSON file names (without the .json extension)
+# List of JSON file names (without the .json extension) to be stored to MongoDB.
+#
+# Note: The order of this list matters. We may use context provided from an
+# earlier table to process a later table.
 json_filenames = [
     'character_table',
     'skill_table'
     ] 
+
+data_processing_context = DataProcessingContext()
 
 for filename in json_filenames:
     collection_name = filename
@@ -41,7 +46,7 @@ for filename in json_filenames:
         data = json.load(json_file)
         process_data(data)
         if filename in filename_to_process_func.keys():
-            data = filename_to_process_func[filename](data)
+            data = filename_to_process_func[filename](data, data_processing_context)
         if isinstance(data, dict):
             db[collection_name].insert_one(data)
         elif isinstance(data, list):

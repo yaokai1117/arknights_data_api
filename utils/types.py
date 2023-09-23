@@ -1,5 +1,4 @@
-from typing import Dict, Any, Callable, Union, List
+from typing import Dict, Any, Callable
 
 DataEntry = Dict[str, Any]
-DataList = List[Union[DataEntry, Any]]
 DataProcessFunction = Callable[[DataEntry], DataEntry]

@@ -1,6 +1,6 @@
 
-from typing import Dict
-
+import requests
+import time
 import os
 ROOT_PATH = os.path.join(os.path.dirname(__file__), '..')
 
@@ -8,9 +8,7 @@ import sys
 sys.path.append(ROOT_PATH)
 
 from utils.file_handling import save_dict_to_json, load_dict_from_json, download_file
-
-import requests
-import time
+from typing import Dict
 
 # GitHub repository details
 GITHUB_REPO_OWNER = 'Kengxxiao'

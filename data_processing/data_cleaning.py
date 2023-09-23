@@ -6,7 +6,7 @@ import sys
 sys.path.append(ROOT_PATH)
 
 from typing import Union, List
-from utils.types import DataEntry, DataList
+from utils.types import DataEntry
 
 format_code_map = {
     '0%': '.0%'
@@ -31,7 +31,7 @@ def interpolate_string(string: str, param_map: List[DataEntry]) -> str:
             
     return string
 
-def process_blackboards(obj: Union[DataEntry, DataList]) -> None:
+def process_blackboards(obj: Union[DataEntry, list]) -> None:
     if isinstance(obj, dict):
         if 'description' in obj.keys() and 'blackboard' in obj.keys():
             obj['description'] = interpolate_string(obj['description'], obj['blackboard'])
@@ -44,7 +44,7 @@ def process_blackboards(obj: Union[DataEntry, DataList]) -> None:
 def remove_tags(string: str) -> str:
     return re.sub(r'<(@|\$)(\w+)\.(\w+)>(.*?)<\/>', r'\4', string)
 
-def process_tags(obj: Union[DataEntry, DataList]) -> None:
+def process_tags(obj: Union[DataEntry, list]) -> None:
     if isinstance(obj, dict):
         for key, value in obj.items():
             if isinstance(value, str):
@@ -56,7 +56,7 @@ def process_tags(obj: Union[DataEntry, DataList]) -> None:
             if isinstance(value, dict):
                 process_tags(value)
 
-def process_data(obj: Union[DataEntry, DataList]) -> None:
+def process_data(obj: Union[DataEntry, list]) -> None:
     process_tags(obj)
     process_blackboards(obj)
 
