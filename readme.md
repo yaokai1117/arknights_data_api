@@ -13,7 +13,6 @@ The full schema can be found in [schema.graphql](https://github.com/yaokai1117/a
 ```
 {
   characters(filter: {tagList: ["治疗", "防护", "输出"], rarity: 6}) {
-    characterPrefabKey
     name
     description
     position
@@ -47,7 +46,6 @@ Results:
   "data": {
     "characters": [
       {
-        "characterPrefabKey": "char_423_blemsh",
         "name": "瑕光",
         "description": "卡西米尔骑士瑕光，即将成熟的荣光。\n如果找不到她，请去询问工程部干员。",
         "position": "MELEE",
@@ -135,7 +133,6 @@ Results:
 ```
 {
   skill(filter: {skillName: "先贤化身"}) {
-    skillId
     skillName
     characters {
       characterPrefabKey
@@ -167,7 +164,6 @@ Results:
   {
   "data": {
     "skill": {
-      "skillId": "skchr_blemsh_3",
       "skillName": "先贤化身",
       "characters": [
         {
@@ -295,7 +291,6 @@ Results:
 ```
 {
   skill(filter: {skillName: "先贤化身"}) {
-    skillId
     skillName
     skillRequirements {
       character {
@@ -305,7 +300,6 @@ Results:
         timeCost
         materialCost {
           count
-          id
         }
       }
     }
@@ -322,7 +316,6 @@ Results:
   {
   "data": {
     "skill": {
-      "skillId": "skchr_blemsh_3",
       "skillName": "先贤化身",
       "skillRequirements": [
         {

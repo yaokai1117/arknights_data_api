@@ -1,8 +1,5 @@
 # We intentionally left comments in Chinese for LLM to relate fields with the terms in prompt.
 type Character {
-  # Primary key
-  characterPrefabKey: String!
-  
   name: String!
 
   description: String!
@@ -44,8 +41,6 @@ type Character {
 }
 
 type Skill {
-  skillId: String!
-
   skillName: String!
 
   # 拥有此技能的干员
