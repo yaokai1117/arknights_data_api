@@ -20,7 +20,6 @@ def resolve_character(obj, *_) -> List[DataEntry]:
     query = {'characterPrefabKey': {'$in': char_ids}}
     return mongo_client.query_collection('character_table', query)
 
-
 @skill.field('skillRequirements')
 def resolve_skill_requirements(obj, *_) -> List[DataEntry]:
     return obj['requirements']
