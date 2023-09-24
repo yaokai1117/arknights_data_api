@@ -1,25 +1,18 @@
 import json
-import pymongo
-
 import os
 ROOT_PATH = os.path.join(os.path.dirname(__file__), '..')
 
+import sys
+sys.path.append(ROOT_PATH)
+
 from data_cleaning import process_data
-from dotenv import load_dotenv
 from per_table_data_cleaning import filename_to_process_func, DataProcessingContext
+from utils.mongo_client import MongoClient
 
-load_dotenv()
-
-MONGODB_URI = os.getenv("MONGODB_URI")
-DATABASE_NAME = 'arknights'
 DATA_DIR_NAME = 'data'
 
 # Directory containing the JSON files
 dirname = os.path.join(ROOT_PATH, DATA_DIR_NAME)
-
-# Connect to MongoDB
-client = pymongo.MongoClient(MONGODB_URI)
-db = client[DATABASE_NAME]
 
 # List of JSON file names (without the .json extension) to be stored to MongoDB.
 #
@@ -32,27 +25,25 @@ json_filenames = [
 
 data_processing_context = DataProcessingContext()
 
-for filename in json_filenames:
-    collection_name = filename
+def update_mongo_db() -> None:
+    mongo_client = MongoClient()
+    for filename in json_filenames:
+        collection_name = filename
 
-    json_file_path = os.path.join(dirname, f'{filename}.json')
+        json_file_path = os.path.join(dirname, f'{filename}.json')
 
-    # Check if the collection already exists and drop it if it does
-    if collection_name in db.list_collection_names():
-        db[collection_name].drop()
+        # Read the JSON file and insert its contents into the collection
+        with open(json_file_path, 'r', encoding='utf-8') as json_file:
+            data = json.load(json_file)
+            process_data(data)
+            if filename in filename_to_process_func.keys():
+                data = filename_to_process_func[filename](data, data_processing_context)
+            mongo_client.create_or_replace_collection(collection_name, data)
 
-    # Read the JSON file and insert its contents into the collection
-    with open(json_file_path, 'r', encoding='utf-8') as json_file:
-        data = json.load(json_file)
-        process_data(data)
-        if filename in filename_to_process_func.keys():
-            data = filename_to_process_func[filename](data, data_processing_context)
-        if isinstance(data, dict):
-            db[collection_name].insert_one(data)
-        elif isinstance(data, list):
-            db[collection_name].insert_many(data)
+        print(f"Collection '{collection_name}' created/updated with data from '{json_file_path}'")
 
-    print(f"Collection '{collection_name}' created/updated with data from '{json_file_path}'")
+    mongo_client.close()
 
-# Close the MongoDB connection
-client.close()
+
+if __name__ == '__main__':
+    update_mongo_db()

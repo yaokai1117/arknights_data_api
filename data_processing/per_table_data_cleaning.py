@@ -5,7 +5,7 @@ import sys
 sys.path.append(ROOT_PATH)
 
 from typing import List, Dict
-from utils.types import DataEntry, DataProcessFunction
+from utils.type_def import DataEntry, DataProcessFunction
 
 # Context shared across the processing of differnt json files.
 class DataProcessingContext:

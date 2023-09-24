@@ -6,7 +6,7 @@ import sys
 sys.path.append(ROOT_PATH)
 
 from typing import Union, List
-from utils.types import DataEntry
+from utils.type_def import DataEntry
 
 format_code_map = {
     '0%': '.0%'

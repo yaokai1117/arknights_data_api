@@ -1,8 +1,8 @@
-from typing import Dict
-
 import json
 import os
 import requests
+
+from typing import Dict
 
 def save_dict_to_json(data_dict: object, dirname: str, filename: str) -> None:
     if not os.path.exists(dirname):

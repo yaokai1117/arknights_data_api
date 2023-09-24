@@ -8,6 +8,7 @@ import sys
 sys.path.append(ROOT_PATH)
 
 from utils.file_handling import save_dict_to_json, load_dict_from_json, download_file
+from data_processing.mongo_updater import update_mongo_db
 from typing import Dict
 
 # GitHub repository details
@@ -58,8 +59,11 @@ def main() -> None:
     while True:
         fetch_repository_info()
         print('Refetched latest game data from github.')
-        # Trigger another script here (e.g., using subprocess module)
-        # subprocess.run(['python', 'path/to/your/script.py'])
+        print('Updating MongoDB.')
+        
+        update_mongo_db()
+
+        print('MongoDB updated.')
         
         time.sleep(UPDATE_INTERVAL_SECONDS)
 

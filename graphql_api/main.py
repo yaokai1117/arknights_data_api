@@ -14,7 +14,6 @@ SCHEMA_FILENAME = 'schema.graphql'
 dirname = os.path.join(os.path.dirname(__file__), SCHEMA_FILENAME)
 schema = load_schema_from_path(dirname)
 
-
 bindables = [
     *query_bindables,
     *character_bindables,

@@ -1,26 +1,18 @@
-import pymongo
 import os
 ROOT_PATH = os.path.join(os.path.dirname(__file__), '..')
 
 import sys
 sys.path.append(ROOT_PATH)
 
-from utils.types import DataEntry
+from utils.type_def import DataEntry
+from utils.mongo_client import MongoClient
 from typing import List, Dict, Any
 from ariadne import ObjectType, InputType
 from character_bindables import reversed_rarity_map
-from dotenv import load_dotenv
 
 # Top lelvel query bindables.
 
-load_dotenv()
-
-MONGODB_URI = os.getenv("MONGODB_URI")
-DATABASE_NAME = 'arknights'
-
-# Mongo db connection
-client = pymongo.MongoClient(MONGODB_URI)
-db = client[DATABASE_NAME]
+mongo_client = MongoClient()
 
 def filter_to_mongo_query(filter: Dict[str, Any], data_wrapper_map: Dict[str, dict] = {}) -> dict:
     sub_queries = []
@@ -43,9 +35,8 @@ query = ObjectType('Query')
 
 @query.field('characters')
 def resolve_character(*_, filter: Dict[str, Any]) -> List[DataEntry]:
-    collection = db['character_table']
     query = filter_to_mongo_query(filter, data_wrapper_map={'rarity': reversed_rarity_map})
-    return collection.find(query)
+    return mongo_client.query_collection('character_table', query)
 
 query_bindables = [
     query,

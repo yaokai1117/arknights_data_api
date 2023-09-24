@@ -4,7 +4,7 @@ ROOT_PATH = os.path.join(os.path.dirname(__file__), '..')
 import sys
 sys.path.append(ROOT_PATH)
 
-from utils.types import DataEntry
+from utils.type_def import DataEntry
 from typing import List
 from ariadne import ObjectType
 
