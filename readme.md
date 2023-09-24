@@ -299,7 +299,7 @@ Results:
     skillName
     skillRequirements {
       character {
-				name
+	  name
       }
       proficientRequirements {
         timeCost
