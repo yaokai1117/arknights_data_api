@@ -9,8 +9,11 @@ from utils.type_def import DataEntry, DataProcessFunction
 
 # Context shared across the processing of differnt json files.
 class DataProcessingContext:
-    # Map from character ids to skill ids.
-    character_to_skills: Dict[str, List[str]] = {}
+    # Map from character ids to skill requiremetns.
+    #
+    # Need to store this in the shared context because this is
+    # a skill info while stored in the character table.
+    character_to_skill_requirements: Dict[str, List[DataEntry]] = {}
 
 # Clean each table specifically.
 #
@@ -40,22 +43,28 @@ def process_character_table(input_data: DataEntry, context: DataProcessingContex
     ]
     useful_data_filter = keep_useful_fields(useful_fields)
     for char_key, data in input_data.items():
-        context.character_to_skills[char_key] = [skill['skillId'] for skill in data['skills']]
+        for skill in data['skills']:
+            skill['characterId'] = char_key
+        context.character_to_skill_requirements[char_key] = data['skills']
         output.append({'characterPrefabKey': char_key, **useful_data_filter(data)})
     return output
 
 def process_skill_table(input_data: DataEntry, context: DataProcessingContext) -> List[DataEntry]:
     output: List[DataEntry] = []
-    skill_to_characters: Dict[str, List[str]] = {}
-    for char, skills in context.character_to_skills.items():
-        for skill in skills:
-            if skill not in skill_to_characters.keys():
-                skill_to_characters[skill] = []
-            skill_to_characters[skill].append(char)
+    # Skill id to its proficient requirements in different character.
+    # Note that different characters can have the same skill name, but their
+    # proficient requiremetns can be different.
+    skill_to_reqs: Dict[str, List[DataEntry]] = {}
+    for skill_reqs in context.character_to_skill_requirements.values():
+        for req in skill_reqs:
+            skill_id = req['skillId']
+            if skill_id not in skill_to_reqs.keys():
+                skill_to_reqs[skill_id] = []
+            skill_to_reqs[skill_id].append(req)
     useful_data_filter = keep_useful_fields(['levels'])
     for skillId, data in input_data.items():
         # Ingore non-character skills.
-        if skillId not in skill_to_characters.keys():
+        if skillId not in skill_to_reqs.keys():
             continue
         data = useful_data_filter(data)
         each_level_useful_data_fileter = keep_useful_fields([
@@ -71,7 +80,9 @@ def process_skill_table(input_data: DataEntry, context: DataProcessingContext) -
             continue
         data['levels'] = levels
         # List of character ids that has this skill.
-        data['characters'] = skill_to_characters[skillId] if skillId in skill_to_characters else []
+        data['characterIds'] = [req['characterId'] for req in skill_to_reqs[skillId]] if skillId in skill_to_reqs.keys() else []
+        # List of proficient requirements (for different characters).
+        data['requirements'] = skill_to_reqs[skillId] if skillId in skill_to_reqs.keys() else []
         # Skill name, for easier query.
         data['skillName'] = levels[0]['name']
         output.append({'skillId': skillId, **data})

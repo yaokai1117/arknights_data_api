@@ -32,15 +32,15 @@ def filter_to_mongo_query(filter: Dict[str, Any], data_wrapper_map: Dict[str, di
 query = ObjectType('Query')
 
 @query.field('characters')
-def resolve_character(*_, filter: Dict[str, Any]) -> List[DataEntry]:
+def resolve_characters(*_, filter: Dict[str, Any]) -> List[DataEntry]:
     query = filter_to_mongo_query(filter, data_wrapper_map={'rarity': reversed_rarity_map})
     return mongo_client.query_collection('character_table', query)
 
-@query.field('skills')
-def resolve_skill(*_, filter: Dict[str, str]) -> List[DataEntry]:
+@query.field('skill')
+def resolve_skill(*_, filter: Dict[str, str]) -> DataEntry:
     query = filter_to_mongo_query(filter)
     result = mongo_client.query_collection('skill_table', query)
-    return result
+    return result[0] if len(result) == 1 else {}
 
 query_bindables = [
     query,

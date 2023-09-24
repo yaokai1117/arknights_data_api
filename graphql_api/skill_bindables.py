@@ -16,9 +16,14 @@ skill = ObjectType('Skill')
 
 @skill.field('characters')
 def resolve_character(obj, *_) -> List[DataEntry]:
-    char_ids = obj['characters']
+    char_ids = obj['characterIds']
     query = {'characterPrefabKey': {'$in': char_ids}}
     return mongo_client.query_collection('character_table', query)
+
+
+@skill.field('skillRequirements')
+def resolve_skill_requirements(obj, *_) -> List[DataEntry]:
+    return obj['requirements']
 
 # Resolvers for SkillLevel
 skill_level = ObjectType('SkillLevel')

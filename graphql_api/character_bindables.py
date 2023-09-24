@@ -90,9 +90,19 @@ def resolve_physical_defy(obj, *_) -> int:
 # Resolvers for SkillRequirement
 skill_requirement = ObjectType('SkillRequirement')
 
-@skill_requirement.field('id')
-def resolve_id(obj, *_) -> str:
-    return obj['skillId']
+@skill_requirement.field('skill')
+def resolve_skill_from_requirement(obj, *_) -> DataEntry:
+    skill_id = obj['skillId']
+    query = {'skillId': skill_id}
+    skill_results = mongo_client.query_collection('skill_table', query)
+    return skill_results[0] if len(skill_results) == 1 else {}
+
+@skill_requirement.field('character')
+def resolve_character_from_requirement(obj, *_) -> DataEntry:
+    char_id = obj['characterId']
+    query = {'characterPrefabKey': char_id}
+    skill_results = mongo_client.query_collection('character_table', query)
+    return skill_results[0] if len(skill_results) == 1 else {}
 
 @skill_requirement.field('proficientRequirements')
 def resolve_proficient_requirement(obj, *_) -> List[DataEntry]:

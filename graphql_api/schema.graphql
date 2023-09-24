@@ -51,6 +51,9 @@ type Skill {
   # 拥有此技能的干员
   characters: [Character!]
 
+  # 此技能的专精需求
+  skillRequirements: [SkillRequirement!]
+
   # 每一级的技能信息 (第8, 9, 10级称为专精1，2，3)
   levels: [SkillLevel!]
 }
@@ -110,7 +113,8 @@ type MaterialCost {
 }
 
 type SkillRequirement {
-  id: String!
+  skill: Skill!
+  character: Character!
   proficientRequirements: [ProficientRequirement!]
 }
 
@@ -145,7 +149,5 @@ input SkillFilter {
 type Query {
   characters(filter: CharacterFilter!): [Character!]
 
-  skills(filter: SkillFilter): [Skill!]
-
-  skillRequirements(filter: SkillFilter): [SkillRequirement!]
+  skill(filter: SkillFilter): Skill
 }
