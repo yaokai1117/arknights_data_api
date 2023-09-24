@@ -4,7 +4,7 @@ A [GraphQL](https://graphql.org/) interface for [Arknights game data](https://gi
 
 **Note**: currently only support Chinese version data set.  
 
-The code contains two parts: one script to periodically check the Arknights game data github for updats, another one to start a GraphQL server for querying those data.
+The code contains two parts: one script to periodically check the Arknights game data github for updates and store them into MongoDB, another one to start a GraphQL server for querying those data.
 
 The full schema can be found in [schema.graphql](https://github.com/yaokai1117/arknights_data_api/blob/main/graphql_api/schema.graphql) file.
 
