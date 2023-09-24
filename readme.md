@@ -135,7 +135,6 @@ Results:
   skill(filter: {skillName: "先贤化身"}) {
     skillName
     characters {
-      characterPrefabKey
       name
       description
       tagList
@@ -167,7 +166,6 @@ Results:
       "skillName": "先贤化身",
       "characters": [
         {
-          "characterPrefabKey": "char_423_blemsh",
           "name": "瑕光",
           "description": "卡西米尔骑士瑕光，即将成熟的荣光。\n如果找不到她，请去询问工程部干员。",
           "tagList": [
