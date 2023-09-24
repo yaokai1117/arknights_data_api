@@ -28,7 +28,7 @@ class MongoClient:
 
     def query_collection(self, collection_name: str, query: dict) -> List[DataEntry]:
         collection = self.db[collection_name]
-        return collection.find(query)
+        return list(collection.find(query))
 
 
     def close(self):

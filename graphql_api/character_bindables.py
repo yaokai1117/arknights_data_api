@@ -4,7 +4,8 @@ ROOT_PATH = os.path.join(os.path.dirname(__file__), '..')
 import sys
 sys.path.append(ROOT_PATH)
 
-from utils.type_def import DataEntry
+from utils.type_def import DataEntry    
+from shared_instances import mongo_client
 from typing import List
 from ariadne import ObjectType
 
@@ -61,6 +62,12 @@ def resolve_potential_ranks(obj, *_) -> List[str]:
 @character.field('skillRequirements')
 def resolve_skill_requirements(obj, *_) -> List[DataEntry]:
     return obj['skills']
+
+@character.field('skills')
+def resolve_skills(obj, *_) -> List[DataEntry]:
+    skill_ids = [skill['skillId'] for skill in obj['skills']]
+    query = {'skillId': {'$in': skill_ids}}
+    return mongo_client.query_collection('skill_table', query)
 
 # Resolvers for Phase
 phase = ObjectType('Phase')

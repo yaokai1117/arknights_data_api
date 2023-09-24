@@ -5,14 +5,12 @@ import sys
 sys.path.append(ROOT_PATH)
 
 from utils.type_def import DataEntry
-from utils.mongo_client import MongoClient
+from shared_instances import mongo_client
 from typing import List, Dict, Any
 from ariadne import ObjectType, InputType
 from character_bindables import reversed_rarity_map
 
 # Top lelvel query bindables.
-
-mongo_client = MongoClient()
 
 def filter_to_mongo_query(filter: Dict[str, Any], data_wrapper_map: Dict[str, dict] = {}) -> dict:
     sub_queries = []
@@ -37,6 +35,12 @@ query = ObjectType('Query')
 def resolve_character(*_, filter: Dict[str, Any]) -> List[DataEntry]:
     query = filter_to_mongo_query(filter, data_wrapper_map={'rarity': reversed_rarity_map})
     return mongo_client.query_collection('character_table', query)
+
+@query.field('skills')
+def resolve_skill(*_, filter: Dict[str, str]) -> List[DataEntry]:
+    query = filter_to_mongo_query(filter)
+    result = mongo_client.query_collection('skill_table', query)
+    return result
 
 query_bindables = [
     query,

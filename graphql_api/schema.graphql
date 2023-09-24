@@ -138,10 +138,14 @@ input CharacterFilter {
   subProfession: String
 }
 
+input SkillFilter {
+  skillName: String
+}
+
 type Query {
   characters(filter: CharacterFilter!): [Character!]
 
-  skill(skillName: String, character_name: String): [Skill!]
+  skills(filter: SkillFilter): [Skill!]
 
-  skillRequirements(skillName: String, character_name: String): [SkillRequirement!]
+  skillRequirements(filter: SkillFilter): [SkillRequirement!]
 }

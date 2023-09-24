@@ -8,6 +8,7 @@ from ariadne import load_schema_from_path, make_executable_schema
 from ariadne.asgi import GraphQL
 from query_bindables import query_bindables
 from character_bindables import character_bindables
+from skill_bindables import skill_bindables
 
 # Load the GraphQL schema from the .graphql file
 SCHEMA_FILENAME = 'schema.graphql'
@@ -17,6 +18,7 @@ schema = load_schema_from_path(dirname)
 bindables = [
     *query_bindables,
     *character_bindables,
+    *skill_bindables,
 ]
 
 # Create an executable schema with resolvers
