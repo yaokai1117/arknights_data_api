@@ -1,6 +1,6 @@
 ## arknights-data-api
 
-A [GraphQL](https://graphql.org/) interface for [Arknights game data](https://github.com/Kengxxiao/ArknightsGameData).  
+A [GraphQL](https://graphql.org/) interface for [Arknights game data](https://github.com/Kengxxiao/ArknightsGameData).  **Everyting is still WIP.**
 
 **Note**: currently only support Chinese version data set.  
 
