@@ -3,3 +3,4 @@ data/*
 metadata/*
 */__pycache__/*
 .env
+*.code-workspace
