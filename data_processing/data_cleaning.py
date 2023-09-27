@@ -9,24 +9,33 @@ from typing import Union, List
 from utils.type_def import DataEntry
 
 format_code_map = {
-    '0%': '.0%'
+    '0%': '.0%',
+    '0.0': '.2f',
+    '0': '.0f',
+    '0.0%': '.2%',
 }
 
 def interpolate_string(string: str, param_map: List[DataEntry]) -> str:
+    if string == None:
+        return None
     for param in param_map:
         key = param['key']
         value = param['value']
-        value_str = str(value) if value is not None else ''
         
         # Check if the key with format exists in the string as a placeholder
-        pattern = re.compile(rf'\{{{key}(:.*?)?\}}')
+        pattern = re.compile(rf'\{{(-?){key}(:.*?)?\}}', re.IGNORECASE)
         matches = pattern.findall(string)
         
-        for match in matches:
-            if ':' in match:
-                # [match] is the captured string inside of the () of the regex.
-                format_spec = format_code_map[match[1:]]
-                value_str = format(float(value_str), format_spec)
+        # [matches] is the captured string inside of the () of the regex.
+        for match_group in matches:  
+            multiplier = -1 if match_group[0] == '-' else 1
+            multiplied_value = value * multiplier
+            value_str: str = None
+            if isinstance(multiplied_value, float):
+                format_spec = format_code_map[match_group[1][1:]] if ':' in match_group[1] else '.0f'
+                value_str = format(multiplied_value, format_spec)
+            else:
+                value_str = str(multiplied_value)
             string = re.sub(pattern, value_str, string)
             
     return string
@@ -36,24 +45,29 @@ def process_blackboards(obj: Union[DataEntry, list]) -> None:
         if 'description' in obj.keys() and 'blackboard' in obj.keys():
             obj['description'] = interpolate_string(obj['description'], obj['blackboard'])
             del obj['blackboard']
+        for key, value in obj.items():
+            if isinstance(value, (dict, list)):
+                process_blackboards(value)
     elif isinstance(obj, list):
         for value in obj:
-            if isinstance(value, dict):
-                process_tags(value)
+            if isinstance(value, (dict, list)):
+                process_blackboards(value)
 
+tag_pattern = re.compile(r'<(@|\$)(\w+)\.(\w+)>(.*?)<\/>')
 def remove_tags(string: str) -> str:
-    return re.sub(r'<(@|\$)(\w+)\.(\w+)>(.*?)<\/>', r'\4', string)
+    return re.sub(tag_pattern, r'\4', string)
 
 def process_tags(obj: Union[DataEntry, list]) -> None:
     if isinstance(obj, dict):
         for key, value in obj.items():
             if isinstance(value, str):
-                obj[key] = remove_tags(value)
+                while tag_pattern.search(obj[key]) != None:
+                    obj[key] = remove_tags(obj[key])
             elif isinstance(value, (dict, list)):
                 process_tags(value)
     elif isinstance(obj, list):
         for value in obj:
-            if isinstance(value, dict):
+            if isinstance(value, (dict, list)):
                 process_tags(value)
 
 def process_data(obj: Union[DataEntry, list]) -> None:
