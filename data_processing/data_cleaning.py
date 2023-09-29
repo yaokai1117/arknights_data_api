@@ -10,9 +10,9 @@ from utils.type_def import DataEntry
 
 format_code_map = {
     '0%': '.0%',
-    '0.0': '.2f',
+    '0.0': '.1f',
     '0': '.0f',
-    '0.0%': '.2%',
+    '0.0%': '.1%',
 }
 
 def interpolate_string(string: str, param_map: List[DataEntry]) -> str:
