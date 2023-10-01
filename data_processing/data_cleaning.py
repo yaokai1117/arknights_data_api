@@ -23,7 +23,7 @@ def interpolate_string(string: str, param_map: List[DataEntry]) -> str:
         value = param['value']
         
         # Check if the key with format exists in the string as a placeholder
-        pattern = re.compile(rf'\{{(-?){key}(:.*?)?\}}', re.IGNORECASE)
+        pattern = re.compile(rf'\{{(-?){re.escape(key)}(:.*?)?\}}', re.IGNORECASE)
         matches = pattern.findall(string)
         
         # [matches] is the captured string inside of the () of the regex.

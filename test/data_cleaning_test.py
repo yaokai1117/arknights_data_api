@@ -104,6 +104,25 @@ class TestStringMethods(unittest.TestCase):
         process_data(data)
         self.assertEqual(data['description'], '每秒恢复最大生命的4.5%')
         
+    def test_interolate_with_special_characters(self):
+        data = {
+            'description': '攻击力+{reed2_skil_3[switch_mode].atk:0%} 技能期间附带灼痕效果的敌人每秒受到{talent@s3_atk_scale:0%}焰影苇草攻击力的法术伤害',
+            "blackboard": [
+                {
+                    "key": "talent@s3_atk_scale",
+                    "value": 0.4,
+                    "valueStr": None
+                },
+                {
+                    "key": "reed2_skil_3[switch_mode].atk",
+                    "value": 0.45,
+                    "valueStr": None
+                },
+            ]
+        }
+        process_data(data)
+        self.assertEqual(data['description'], '攻击力+45% 技能期间附带灼痕效果的敌人每秒受到40%焰影苇草攻击力的法术伤害')
+
     def test_remove_tage_and_interpolate(self):
         data = {
             'description': '使命中目标<$ba.stun>晕眩</><@ba.vup>{attack@stun:0.0}</>秒',
