@@ -1,3 +1,4 @@
+import re
 import os
 ROOT_PATH = os.path.join(os.path.dirname(__file__), '..')
 
@@ -23,6 +24,10 @@ class DataProcessingContext:
 def keep_useful_fields(useful_fields: List[str]) -> DataProcessFunction:
     return lambda data : {key: value for key, value in data.items() if key in useful_fields}
 
+special_char_in_names = re.compile(r'(\'|\"|\‘|\“|\”|\’|\，|\。|\《|\》|\!|\！|\?|\||\,|\.|\(|\)|\[|\]|\-|\、|\《|\》|\s)')
+def remove_special_characters(input: str) -> str:
+    return re.sub(special_char_in_names, '', input)
+
 def process_character_table(input_data: DataEntry, context: DataProcessingContext) -> List[DataEntry]:
     output: List[DataEntry] = []
     useful_fields = [
@@ -43,6 +48,7 @@ def process_character_table(input_data: DataEntry, context: DataProcessingContex
     ]
     useful_data_filter = keep_useful_fields(useful_fields)
     for char_key, data in input_data.items():
+        data['name'] = remove_special_characters(data['name'])
         for skill in data['skills']:
             skill['characterId'] = char_key
         context.character_to_skill_requirements[char_key] = data['skills']
@@ -75,7 +81,10 @@ def process_skill_table(input_data: DataEntry, context: DataProcessingContext) -
             'spData',
             'duration',
         ])
-        levels = [each_level_useful_data_fileter(level) for level in data['levels']]
+        levels = []
+        for level in data['levels']:
+            level['name'] = remove_special_characters(level['name'])
+            levels.append(each_level_useful_data_fileter(level))
         if len(levels) == 0:
             continue
         data['levels'] = levels
