@@ -59,26 +59,39 @@ def resolve_description(obj, *_) -> List[str]:
 def resolve_potential_ranks(obj, *_) -> List[str]:
     return [raw['description'] for raw in obj['potentialRanks']]
 
-@character.field('skillRequirements')
-def resolve_skill_requirements(obj, *_) -> List[DataEntry]:
-    return obj['skills']
-
 @character.field('skills')
-def resolve_skills(obj, *_) -> List[DataEntry]:
+def resolve_skills(obj, info, index: int = None, *_) -> List[DataEntry]:
     skill_ids = [skill['skillId'] for skill in obj['skills']]
     query = {'skillId': {'$in': skill_ids}}
-    return mongo_client.query_collection('skill_table', query)
+    skills = mongo_client.query_collection('skill_table', query)
+    if index == None or len(skills) == 0:
+        return skills
+    else:
+        return [skills[index % len(skills)]]
+
+@character.field('phases')
+def resolve_phases(obj, info, index: int = None, *_) -> int:
+    phases = obj['phases']
+    if index == None or len(phases) == 0:
+        return phases
+    else:
+        return [phases[index % len(phases)]]
+
 
 # Resolvers for Phase
 phase = ObjectType('Phase')
 
 @phase.field('attributesKeyFrames')
-def resolve_attributes_key_frames(obj, *_) -> List[DataEntry]:
+def resolve_attributes_key_frames(obj, info, index: int = None, *_) -> List[DataEntry]:
     frames = []
     for frame_raw_obj in obj['attributesKeyFrames']:
         data = frame_raw_obj['data']
         frames.append({'level': frame_raw_obj['level'],  **data})
-    return frames
+    
+    if index == None or len(frames) == 0:
+        return frames
+    else:
+        return [frames[index % len(frames)]]
 
 # Resolvers for AttributesKeyFrame
 attribute_key_frame = ObjectType('AttributesKeyFrame')

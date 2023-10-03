@@ -20,11 +20,11 @@ The full schema can be found in [schema.graphql](https://github.com/yaokai1117/a
     subProfession
     traits
     talents
-    skills {
+    skills(index: null) {
     	skillName
     }
-    phases {
-      attributesKeyFrames {
+    phases(index: -1) {
+      attributesKeyFrames(index: -1) {
         level
         maxHp
         atk
@@ -42,7 +42,7 @@ Results:
   <summary>Click me to expand</summary>
 
 ```js
-  {
+{
   "data": {
     "characters": [
       {
@@ -70,41 +70,6 @@ Results:
         "phases": [
           {
             "attributesKeyFrames": [
-              {
-                "level": 1,
-                "maxHp": 1346,
-                "atk": 207
-              },
-              {
-                "level": 50,
-                "maxHp": 1820,
-                "atk": 297
-              }
-            ],
-            "maxLevel": 50
-          },
-          {
-            "attributesKeyFrames": [
-              {
-                "level": 1,
-                "maxHp": 1820,
-                "atk": 297
-              },
-              {
-                "level": 80,
-                "maxHp": 2334,
-                "atk": 402
-              }
-            ],
-            "maxLevel": 80
-          },
-          {
-            "attributesKeyFrames": [
-              {
-                "level": 1,
-                "maxHp": 2334,
-                "atk": 402
-              },
               {
                 "level": 90,
                 "maxHp": 3242,
@@ -140,7 +105,7 @@ Results:
       tagList
       position
     }
-    levels {
+    levels(index: -1) {
       description
       skillType
       durationType
@@ -160,7 +125,7 @@ Results:
   <summary>Click me to expand</summary>
 
 ```js
-  {
+{
   "data": {
     "skill": {
       "skillName": "先贤化身",
@@ -178,97 +143,7 @@ Results:
       ],
       "levels": [
         {
-          "description": "攻击力+{atk:0%}，防御力+{def:0%}，每次攻击额外造成相当于攻击力{attack@blemsh_s_3_extra_dmg[magic].atk_scale:0%}的法术伤害，并恢复周围一名其他友方单位相当于攻击力{heal_scale:0%}的生命",
-          "skillType": "MANUAL",
-          "durationType": "NONE",
-          "duration": 20,
-          "spType": "INCREASE_WHEN_TAKEN_DAMAGE",
-          "spCost": 30,
-          "initialSp": 15,
-          "maxCharge": 1
-        },
-        {
-          "description": "攻击力+{atk:0%}，防御力+{def:0%}，每次攻击额外造成相当于攻击力{attack@blemsh_s_3_extra_dmg[magic].atk_scale:0%}的法术伤害，并恢复周围一名其他友方单位相当于攻击力{heal_scale:0%}的生命",
-          "skillType": "MANUAL",
-          "durationType": "NONE",
-          "duration": 21,
-          "spType": "INCREASE_WHEN_TAKEN_DAMAGE",
-          "spCost": 30,
-          "initialSp": 15,
-          "maxCharge": 1
-        },
-        {
-          "description": "攻击力+{atk:0%}，防御力+{def:0%}，每次攻击额外造成相当于攻击力{attack@blemsh_s_3_extra_dmg[magic].atk_scale:0%}的法术伤害，并恢复周围一名其他友方单位相当于攻击力{heal_scale:0%}的生命",
-          "skillType": "MANUAL",
-          "durationType": "NONE",
-          "duration": 22,
-          "spType": "INCREASE_WHEN_TAKEN_DAMAGE",
-          "spCost": 30,
-          "initialSp": 15,
-          "maxCharge": 1
-        },
-        {
-          "description": "攻击力+{atk:0%}，防御力+{def:0%}，每次攻击额外造成相当于攻击力{attack@blemsh_s_3_extra_dmg[magic].atk_scale:0%}的法术伤害，并恢复周围一名其他友方单位相当于攻击力{heal_scale:0%}的生命",
-          "skillType": "MANUAL",
-          "durationType": "NONE",
-          "duration": 23,
-          "spType": "INCREASE_WHEN_TAKEN_DAMAGE",
-          "spCost": 29,
-          "initialSp": 15,
-          "maxCharge": 1
-        },
-        {
-          "description": "攻击力+{atk:0%}，防御力+{def:0%}，每次攻击额外造成相当于攻击力{attack@blemsh_s_3_extra_dmg[magic].atk_scale:0%}的法术伤害，并恢复周围一名其他友方单位相当于攻击力{heal_scale:0%}的生命",
-          "skillType": "MANUAL",
-          "durationType": "NONE",
-          "duration": 24,
-          "spType": "INCREASE_WHEN_TAKEN_DAMAGE",
-          "spCost": 29,
-          "initialSp": 15,
-          "maxCharge": 1
-        },
-        {
-          "description": "攻击力+{atk:0%}，防御力+{def:0%}，每次攻击额外造成相当于攻击力{attack@blemsh_s_3_extra_dmg[magic].atk_scale:0%}的法术伤害，并恢复周围一名其他友方单位相当于攻击力{heal_scale:0%}的生命",
-          "skillType": "MANUAL",
-          "durationType": "NONE",
-          "duration": 25,
-          "spType": "INCREASE_WHEN_TAKEN_DAMAGE",
-          "spCost": 29,
-          "initialSp": 15,
-          "maxCharge": 1
-        },
-        {
-          "description": "攻击力+{atk:0%}，防御力+{def:0%}，每次攻击额外造成相当于攻击力{attack@blemsh_s_3_extra_dmg[magic].atk_scale:0%}的法术伤害，并恢复周围一名其他友方单位相当于攻击力{heal_scale:0%}的生命",
-          "skillType": "MANUAL",
-          "durationType": "NONE",
-          "duration": 26,
-          "spType": "INCREASE_WHEN_TAKEN_DAMAGE",
-          "spCost": 28,
-          "initialSp": 15,
-          "maxCharge": 1
-        },
-        {
-          "description": "攻击力+{atk:0%}，防御力+{def:0%}，每次攻击额外造成相当于攻击力{attack@blemsh_s_3_extra_dmg[magic].atk_scale:0%}的法术伤害，并恢复周围一名其他友方单位相当于攻击力{heal_scale:0%}的生命",
-          "skillType": "MANUAL",
-          "durationType": "NONE",
-          "duration": 27,
-          "spType": "INCREASE_WHEN_TAKEN_DAMAGE",
-          "spCost": 27,
-          "initialSp": 15,
-          "maxCharge": 1
-        },
-        {
-          "description": "攻击力+{atk:0%}，防御力+{def:0%}，每次攻击额外造成相当于攻击力{attack@blemsh_s_3_extra_dmg[magic].atk_scale:0%}的法术伤害，并恢复周围一名其他友方单位相当于攻击力{heal_scale:0%}的生命",
-          "skillType": "MANUAL",
-          "durationType": "NONE",
-          "duration": 28,
-          "spType": "INCREASE_WHEN_TAKEN_DAMAGE",
-          "spCost": 26,
-          "initialSp": 15,
-          "maxCharge": 1
-        },
-        {
-          "description": "攻击力+{atk:0%}，防御力+{def:0%}，每次攻击额外造成相当于攻击力{attack@blemsh_s_3_extra_dmg[magic].atk_scale:0%}的法术伤害，并恢复周围一名其他友方单位相当于攻击力{heal_scale:0%}的生命",
+          "description": "攻击力+110%，防御力+60%，每次攻击额外造成相当于攻击力100%的法术伤害，并恢复周围一名其他友方单位相当于攻击力100%的生命",
           "skillType": "MANUAL",
           "durationType": "NONE",
           "duration": 30,

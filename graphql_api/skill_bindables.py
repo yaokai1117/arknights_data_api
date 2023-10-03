@@ -24,6 +24,14 @@ def resolve_character(obj, *_) -> List[DataEntry]:
 def resolve_skill_requirements(obj, *_) -> List[DataEntry]:
     return obj['requirements']
 
+@skill.field('levels')
+def resolve_levels(obj, info, index: int = None, *_) -> int:
+    levels = obj['levels']
+    if index == None or len(levels) == 0:
+        return levels
+    else:
+        return [levels[index % len(levels)]]
+
 # Resolvers for SkillLevel
 skill_level = ObjectType('SkillLevel')
 

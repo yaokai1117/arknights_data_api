@@ -24,33 +24,35 @@ type Character {
   # 职业特性
   traits: String!
 
-  # 技能 （不包括技能专精需求）
-  skills: [Skill!]
+  # 技能
+  # 当index为null时，返回所有
+  skills(index: Int): [Skill!]
 
-  # 精英等级，范围：未精英（精英0），精英一，精英二
-  phases: [Phase!]
+  # 精英阶段的属性与需求，范围：未精英（精0），精一，精二
+  # 当index为-1时，返回最高精英阶段
+  # 当index为null时，返回所有
+  phases(index: Int): [Phase!]
 
   # 天赋
   talents: [String!]
 
   # 每个潜能等级带来的提升
   potentialRanks: [String!]
-
-  # 每个技能的专精需求
-  skillRequirements: [SkillRequirement!]
 }
 
 type Skill {
   skillName: String!
 
+  # 每一级的技能信息 (第8, 9, 10级称为专精1，2，3)
+  # 当index为-1时，返回最高等级技能信息
+  # 当index为null时，返回所有
+  levels(index: Int): [SkillLevel!]
+
   # 拥有此技能的干员
   characters: [Character!]
 
-  # 此技能的专精需求
+  # 此技能的专精需求（包括材料，时间）
   skillRequirements: [SkillRequirement!]
-
-  # 每一级的技能信息 (第8, 9, 10级称为专精1，2，3)
-  levels: [SkillLevel!]
 }
 
 type SkillLevel {
@@ -71,14 +73,16 @@ type SkillLevel {
   maxCharge: Int!
 }
 
-# 精英等级
+# 精英阶段
 type Phase {
   # 属性节点
-  attributesKeyFrames: [AttributesKeyFrame!]
+  # 当index为-1时，返回最高等级属性节点
+  # 当index为null时，返回所有
+  attributesKeyFrames(index: Int): [AttributesKeyFrame!]
 
   maxLevel: Int!
 
-  # 到达精英等级所需材料
+  # 到达精英阶段所需材料
   evolveCost: [MaterialCost!]
 }
 
@@ -109,6 +113,7 @@ type MaterialCost {
 type SkillRequirement {
   skill: Skill!
   character: Character!
+  # 专精需求（包括材料，时间）
   proficientRequirements: [ProficientRequirement!]
 }
 
@@ -143,5 +148,5 @@ input SkillFilter {
 type Query {
   characters(filter: CharacterFilter!): [Character!]
 
-  skill(filter: SkillFilter): Skill
+  skill(filter: SkillFilter!): Skill
 }
