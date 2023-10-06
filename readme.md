@@ -172,6 +172,7 @@ Results:
       proficientRequirements {
         timeCost
         materialCost {
+          materialId
           count
         }
       }
@@ -186,7 +187,7 @@ Results:
   <summary>Click me to expand</summary>
 
 ```js
-  {
+{
   "data": {
     "skill": {
       "skillName": "先贤化身",
@@ -200,16 +201,16 @@ Results:
               "timeCost": 28800,
               "materialCost": [
                 {
-                  "count": 8,
-                  "id": "3303"
+                  "materialId": "3303",
+                  "count": 8
                 },
                 {
-                  "count": 4,
-                  "id": "31014"
+                  "materialId": "31014",
+                  "count": 4
                 },
                 {
-                  "count": 11,
-                  "id": "30013"
+                  "materialId": "30013",
+                  "count": 11
                 }
               ]
             },
@@ -217,16 +218,16 @@ Results:
               "timeCost": 57600,
               "materialCost": [
                 {
-                  "count": 12,
-                  "id": "3303"
+                  "materialId": "3303",
+                  "count": 12
                 },
                 {
-                  "count": 4,
-                  "id": "30104"
+                  "materialId": "30104",
+                  "count": 4
                 },
                 {
-                  "count": 7,
-                  "id": "30084"
+                  "materialId": "30084",
+                  "count": 7
                 }
               ]
             },
@@ -234,16 +235,16 @@ Results:
               "timeCost": 86400,
               "materialCost": [
                 {
-                  "count": 15,
-                  "id": "3303"
+                  "materialId": "3303",
+                  "count": 15
                 },
                 {
-                  "count": 6,
-                  "id": "30125"
+                  "materialId": "30125",
+                  "count": 6
                 },
                 {
-                  "count": 5,
-                  "id": "31024"
+                  "materialId": "31024",
+                  "count": 5
                 }
               ]
             }

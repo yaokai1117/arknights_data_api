@@ -132,10 +132,18 @@ def resolve_time_cost(obj, *_) -> int:
 def resolve_material_cost(obj, *_) -> List[DataEntry]:
     return obj['levelUpCost']
 
+# Resolves for MaterialCost
+material_cost = ObjectType('MaterialCost')
+
+@material_cost.field('materialId')
+def resolve_material_id(obj, *_) -> str:
+    return obj['id']
+
 character_bindables = [
     character,
     phase,
     attribute_key_frame,
     skill_requirement,
     proficient_requirement,
+    material_cost,
 ]

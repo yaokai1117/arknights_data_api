@@ -103,7 +103,7 @@ type AttributesKeyFrame {
 }
 
 type MaterialCost {
-  id: String!
+  materialId: String!
   count: Int!
 }
 
