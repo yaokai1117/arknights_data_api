@@ -19,8 +19,9 @@ dirname = os.path.join(ROOT_PATH, DATA_DIR_NAME)
 # Note: The order of this list matters. We may use context provided from an
 # earlier table to process a later table.
 json_filenames = [
+    'item_table',
     'character_table',
-    'skill_table'
+    'skill_table',
     ] 
 
 data_processing_context = DataProcessingContext()

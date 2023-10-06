@@ -172,7 +172,7 @@ Results:
       proficientRequirements {
         timeCost
         materialCost {
-          materialId
+          materialName
           count
         }
       }
@@ -201,15 +201,15 @@ Results:
               "timeCost": 28800,
               "materialCost": [
                 {
-                  "materialId": "3303",
+                  "materialName": "技巧概要·卷3",
                   "count": 8
                 },
                 {
-                  "materialId": "31014",
+                  "materialName": "聚合凝胶",
                   "count": 4
                 },
                 {
-                  "materialId": "30013",
+                  "materialName": "固源岩组",
                   "count": 11
                 }
               ]
@@ -218,15 +218,15 @@ Results:
               "timeCost": 57600,
               "materialCost": [
                 {
-                  "materialId": "3303",
+                  "materialName": "技巧概要·卷3",
                   "count": 12
                 },
                 {
-                  "materialId": "30104",
+                  "materialName": "RMA70-24",
                   "count": 4
                 },
                 {
-                  "materialId": "30084",
+                  "materialName": "三水锰矿",
                   "count": 7
                 }
               ]
@@ -235,15 +235,15 @@ Results:
               "timeCost": 86400,
               "materialCost": [
                 {
-                  "materialId": "3303",
+                  "materialName": "技巧概要·卷3",
                   "count": 15
                 },
                 {
-                  "materialId": "30125",
+                  "materialName": "双极纳米片",
                   "count": 6
                 },
                 {
-                  "materialId": "31024",
+                  "materialName": "炽合金块",
                   "count": 5
                 }
               ]

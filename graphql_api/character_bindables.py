@@ -135,9 +135,9 @@ def resolve_material_cost(obj, *_) -> List[DataEntry]:
 # Resolves for MaterialCost
 material_cost = ObjectType('MaterialCost')
 
-@material_cost.field('materialId')
-def resolve_material_id(obj, *_) -> str:
-    return obj['id']
+@material_cost.field('materialName')
+def resolve_material_name(obj, *_) -> str:
+    return obj['name']
 
 character_bindables = [
     character,
