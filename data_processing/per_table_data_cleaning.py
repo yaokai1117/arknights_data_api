@@ -44,10 +44,23 @@ def process_character_table(input_data: DataEntry, context: DataProcessingContex
         'skills',
         'talents',
         'potentialRanks',
-        'isNotObtainable',
     ]
     useful_data_filter = keep_useful_fields(useful_fields)
+
+    all_profession = [
+        'PIONEER',
+        'CASTER',
+        'SNIPER',
+        'WARRIOR',
+        'SUPPORT',
+        'SPECIAL',
+        'MEDIC',
+        'TANK'
+    ]
+
     for char_key, data in input_data.items():
+        if data['profession'] not in all_profession or data['isNotObtainable'] == True:
+            continue
         data['name'] = remove_special_characters(data['name'])
         for skill in data['skills']:
             skill['characterId'] = char_key

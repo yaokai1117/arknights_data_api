@@ -6,23 +6,20 @@ type Character {
 
   tagList: [String!]
 
-  # 位置：高台或地面
+  # 位置：高台（远程）或地面（近战）
   position: String!
 
   # 职业
   profession: String!
 
-  # 职业分支
+  # 分支职业
   subProfession: String!
 
-  # 可以获得此干员
-  isNotObtainable: Boolean!
+  # 职业特性描述
+  traits: String!
 
   # 稀有度， 星级，范围：1 ~6
   rarity: Int!
-
-  # 职业特性
-  traits: String!
 
   # 技能
   # 当index为null时，返回所有
