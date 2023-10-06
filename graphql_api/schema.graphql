@@ -31,9 +31,11 @@ type Character {
   phases(index: Int): [Phase!]
 
   # 天赋
+  # Does not support [index] argument.
   talents: [String!]
 
   # 每个潜能等级带来的提升
+  # Does not support [index] argument.
   potentialRanks: [String!]
 }
 
@@ -46,9 +48,11 @@ type Skill {
   levels(index: Int): [SkillLevel!]
 
   # 拥有此技能的干员
+  # Does not support [index] argument.
   characters: [Character!]
 
   # 此技能的专精需求（包括材料，时间）
+  # Does not support [index] argument.
   skillRequirements: [SkillRequirement!]
 }
 
@@ -80,6 +84,7 @@ type Phase {
   maxLevel: Int!
 
   # 到达精英阶段所需材料
+  # Does not support [index] argument.
   evolveCost: [MaterialCost!]
 }
 
@@ -111,6 +116,7 @@ type SkillRequirement {
   skill: Skill!
   character: Character!
   # 专精需求（包括材料，时间）
+  # Does not support [index] argument.
   proficientRequirements: [ProficientRequirement!]
 }
 
