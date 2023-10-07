@@ -63,9 +63,9 @@ def main() -> None:
     while True:
         has_update = fetch_repository_info()
         print('Refetched latest game data from github.')
-        print('Updating MongoDB.')
         
         if has_update:
+            print('Updating MongoDB.')
             update_mongo_db()
             print('MongoDB updated.')
         
