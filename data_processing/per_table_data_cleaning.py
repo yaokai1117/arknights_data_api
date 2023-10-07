@@ -73,6 +73,13 @@ def process_character_table(input_data: DataEntry, context: DataProcessingContex
                     cost_id = cost['id']
                     cost['name'] = context.item_id_to_name.get(cost_id, cost_id)
 
+        for phase in data['phases']:
+            if phase['evolveCost'] == None:
+                continue
+            for cost in phase['evolveCost']:
+                cost_id = cost['id']
+                cost['name'] = context.item_id_to_name.get(cost_id, cost_id)
+
         context.character_to_skill_requirements[char_key] = data['skills']
         output.append({'characterPrefabKey': char_key, **useful_data_filter(data)})
     return output

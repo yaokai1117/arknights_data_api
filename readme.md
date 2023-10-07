@@ -1,6 +1,10 @@
-## arknights-data-api
+## arknights_data_api
 
-A [GraphQL](https://graphql.org/) interface for [Arknights game data](https://github.com/Kengxxiao/ArknightsGameData).  **Everyting is still WIP.**
+A [GraphQL](https://graphql.org/) interface for [Arknights game data](https://github.com/Kengxxiao/ArknightsGameData). 
+
+This API is desedon to be used by [arknights_ask_prts](https://github.com/yaokai1117/arknights_ask_prts). Which is a chatbot API to use LLM to generate game data API query and answer user's questions.
+
+**Everyting is still WIP.**
 
 **Note**: currently only support Chinese version data set.  
 
