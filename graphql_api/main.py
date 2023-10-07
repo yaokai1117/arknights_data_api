@@ -9,6 +9,11 @@ from ariadne.asgi import GraphQL
 from query_bindables import query_bindables
 from character_bindables import character_bindables
 from skill_bindables import skill_bindables
+from dotenv import load_dotenv
+
+load_dotenv()
+
+PORT = int(os.getenv("API_PORT"))
 
 # Load the GraphQL schema from the .graphql file
 SCHEMA_FILENAME = 'schema.graphql'
@@ -29,4 +34,4 @@ app = GraphQL(executable_schema)
 
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run(app, host='0.0.0.0', port=9777)
+    uvicorn.run(app, host='0.0.0.0', port=PORT)

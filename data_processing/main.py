@@ -34,10 +34,12 @@ def load_file_hash() -> Dict[str, str]:
     file_path = os.path.join(dirname, FILE_TO_HASH_JSON_PATH)
     return load_dict_from_json(file_path)
 
-def fetch_repository_info() -> None:
+# Return true if there are any updates.
+def fetch_repository_info() -> bool:
     current_files = load_file_hash()
     response = requests.get(GITHUB_API_BASE_URL)
     dirname = os.path.join(ROOT_PATH, DATA_DIR_NAME)
+    has_udpate = False
     if response.status_code == 200:
         entries = response.json()
         for entry in entries:
@@ -48,22 +50,24 @@ def fetch_repository_info() -> None:
             if download_url == None:
                 print(f'No download URL for file: {filename}')
                 continue
+            has_udpate = True
             download_file(download_url, dirname)
             current_files[filename] = entry['sha']
     save_file_hash(current_files)
+    return has_udpate
 
 def main() -> None:
     if not os.path.exists(FETCH_PATH):
         os.makedirs(FETCH_PATH)
 
     while True:
-        fetch_repository_info()
+        has_update = fetch_repository_info()
         print('Refetched latest game data from github.')
         print('Updating MongoDB.')
         
-        update_mongo_db()
-
-        print('MongoDB updated.')
+        if has_update:
+            update_mongo_db()
+            print('MongoDB updated.')
         
         time.sleep(UPDATE_INTERVAL_SECONDS)
 
