@@ -12,14 +12,15 @@ from character_bindables import reversed_rarity_map
 
 # Top lelvel query bindables.
 
-def filter_to_mongo_query(filter: Dict[str, Any], data_wrapper_map: Dict[str, dict] = {}) -> dict:
+def filter_to_mongo_query(filter: Dict[str, Any], key_map: Dict[str, str] = {}, value_map: Dict[str, dict] = {}) -> dict:
     sub_queries = []
     for name, value in filter.items():
-        data_wrapper = lambda v: data_wrapper_map[name][v] if name in data_wrapper_map.keys() else v
+        name = key_map.get(name, name)
+        value_wrapper = lambda v: value_map.get(name, {}).get(v, v)
         if isinstance(value, list):
-            sub_queries.extend({name: data_wrapper(v)} for v in value)
+            sub_queries.extend({name: value_wrapper(v)} for v in value)
         elif value != None: 
-            sub_queries.append({name: data_wrapper(value)})
+            sub_queries.append({name: value_wrapper(value)})
 
     if len(sub_queries) == 1:
         return sub_queries[0]
@@ -33,7 +34,7 @@ query = ObjectType('Query')
 
 @query.field('characters')
 def resolve_characters(*_, filter: Dict[str, Any]) -> List[DataEntry]:
-    query = filter_to_mongo_query(filter, data_wrapper_map={'rarity': reversed_rarity_map})
+    query = filter_to_mongo_query(filter, key_map={'subProfession': 'subProfessionId'}, value_map={'rarity': reversed_rarity_map})
     return mongo_client.query_collection('character_table', query)
 
 @query.field('skill')
