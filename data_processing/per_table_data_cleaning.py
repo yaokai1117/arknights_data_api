@@ -1,12 +1,12 @@
-import re
-import os
-ROOT_PATH = os.path.join(os.path.dirname(__file__), '..')
+import os  # nopep8
+import sys  # nopep8
+ROOT_PATH = os.path.join(os.path.dirname(__file__), '..')  # nopep8
+sys.path.append(ROOT_PATH)  # nopep8
 
-import sys
-sys.path.append(ROOT_PATH)
-
-from typing import List, Dict
 from utils.type_def import DataEntry, DataProcessFunction
+from typing import List, Dict
+import re
+
 
 # Context shared across the processing of differnt json files.
 class DataProcessingContext:
@@ -23,12 +23,18 @@ class DataProcessingContext:
 # Mostly remove unused fields, and change the dict-like data structure to a list-of-dict.
 # Also adding fields like foreign keys, names for easier query.
 
-def keep_useful_fields(useful_fields: List[str]) -> DataProcessFunction:
-    return lambda data : {key: value for key, value in data.items() if key in useful_fields}
 
-special_char_in_names = re.compile(r'(\'|\"|\‘|\“|\”|\’|\，|\。|\《|\》|\!|\！|\?|\||\,|\.|\(|\)|\[|\]|\-|\、|\《|\》|\s)')
+def keep_useful_fields(useful_fields: List[str]) -> DataProcessFunction:
+    return lambda data: {key: value for key, value in data.items() if key in useful_fields}
+
+
+special_char_in_names = re.compile(
+    r'(\'|\"|\‘|\“|\”|\’|\，|\。|\《|\》|\!|\！|\?|\||\,|\.|\(|\)|\[|\]|\-|\、|\《|\》|\s)')
+
+
 def remove_special_characters(input: str) -> str:
     return re.sub(special_char_in_names, '', input)
+
 
 def process_character_table(input_data: DataEntry, context: DataProcessingContext) -> List[DataEntry]:
     output: List[DataEntry] = []
@@ -68,10 +74,11 @@ def process_character_table(input_data: DataEntry, context: DataProcessingContex
             # Fill in character id so that we can link to Character from a SkillRequirement.
             skill['characterId'] = char_key
             # Fill in material names.
-            for costs in skill['levelUpCostCond']: 
+            for costs in skill['levelUpCostCond']:
                 for cost in costs['levelUpCost']:
                     cost_id = cost['id']
-                    cost['name'] = context.item_id_to_name.get(cost_id, cost_id)
+                    cost['name'] = context.item_id_to_name.get(
+                        cost_id, cost_id)
 
         for phase in data['phases']:
             if phase['evolveCost'] == None:
@@ -81,8 +88,10 @@ def process_character_table(input_data: DataEntry, context: DataProcessingContex
                 cost['name'] = context.item_id_to_name.get(cost_id, cost_id)
 
         context.character_to_skill_requirements[char_key] = data['skills']
-        output.append({'characterPrefabKey': char_key, **useful_data_filter(data)})
+        output.append({'characterPrefabKey': char_key,
+                      **useful_data_filter(data)})
     return output
+
 
 def process_skill_table(input_data: DataEntry, context: DataProcessingContext) -> List[DataEntry]:
     output: List[DataEntry] = []
@@ -118,27 +127,32 @@ def process_skill_table(input_data: DataEntry, context: DataProcessingContext) -
             continue
         data['levels'] = levels
         # List of character ids that has this skill.
-        data['characterIds'] = [req['characterId'] for req in skill_to_reqs[skill_id]] if skill_id in skill_to_reqs.keys() else []
+        data['characterIds'] = [req['characterId']
+                                for req in skill_to_reqs[skill_id]] if skill_id in skill_to_reqs.keys() else []
         # List of proficient requirements (for different characters).
-        data['requirements'] = skill_to_reqs[skill_id] if skill_id in skill_to_reqs.keys() else []
+        data['requirements'] = skill_to_reqs[skill_id] if skill_id in skill_to_reqs.keys() else [
+        ]
         # Skill name, for easier query.
         data['skillName'] = levels[0]['name']
         output.append({'skillId': skill_id, **data})
     return output
 
+
 def process_item_table(input_data: DataEntry, context: DataProcessingContext) -> List[DataEntry]:
     output: List[DataEntry] = []
-    
+
     items = input_data['items']
-    useful_data_filter = keep_useful_fields(['name', 'description', 'usage', 'obtainApproach'])
+    useful_data_filter = keep_useful_fields(
+        ['name', 'description', 'usage', 'obtainApproach'])
 
     for item_id, data in items.items():
         context.item_id_to_name[item_id] = data['name']
         output.append({'itemId': item_id, **useful_data_filter(data)})
     return output
 
+
 filename_to_process_func = {
     'character_table': process_character_table,
     'skill_table': process_skill_table,
     'item_table': process_item_table,
-}    
+}
