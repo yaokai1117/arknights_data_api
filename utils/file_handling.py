@@ -5,6 +5,9 @@ import base64
 
 from typing import Dict
 
+GITHUB_API_TOKEN = os.getenv("GITHUB_API_TOKEN")
+HEADERS = {'Authorization': f'Bearer {GITHUB_API_TOKEN}'}
+
 
 def save_dict_to_json(data_dict: object, dirname: str, filename: str) -> None:
     if not os.path.exists(dirname):
@@ -24,8 +27,8 @@ def load_dict_from_json(file_path: str) -> Dict[str, str]:
         return data_dict
 
 
-def download_file(url: str, dirname: str):
-    response = requests.get(url)
+def download_file(url: str, dirname: str) -> bool:
+    response = requests.get(url, headers=HEADERS)
     if response.status_code == 200:
         if not os.path.exists(dirname):
             os.makedirs(dirname)
@@ -37,12 +40,14 @@ def download_file(url: str, dirname: str):
             f.write(response.content)
 
         print(f"File downloaded and saved at: {file_path}")
+        return True
     else:
         print(f"Failed to download file from URL: {url}")
+        return False
 
 
-def download_file_from_git_url(url: str, file_path: str):
-    response = requests.get(url)
+def download_file_from_git_url(url: str, file_path: str) -> bool:
+    response = requests.get(url, headers=HEADERS)
     dirname = os.path.dirname(file_path)
     if response.status_code == 200:
         if not os.path.exists(dirname):
@@ -54,5 +59,7 @@ def download_file_from_git_url(url: str, file_path: str):
                 f.write(base64.b64decode(content))
 
         print(f"File downloaded and saved at: {file_path}")
+        return True
     else:
         print(f"Failed to download file from URL: {url}")
+        return False

@@ -4,7 +4,7 @@ ROOT_PATH = os.path.join(os.path.dirname(__file__), '..')  # nopep8
 sys.path.append(ROOT_PATH)  # nopep8
 
 from typing import Dict
-from data_processing.mongo_updater import write_table_data_to_db
+from data_processing.mongo_updater import write_table_data_to_db, write_story_data_to_db
 from utils.file_handling import save_dict_to_json, load_dict_from_json, download_file, download_file_from_git_url
 
 import requests
@@ -23,7 +23,8 @@ METADATA_DIR_NAME = 'metadata'
 TABLE_DATA_DIR_NAME = 'data/table'
 STORY_DATA_DIR_NAME = 'data/story'
 FILE_TO_HASH_JSON_PATH = 'filename_to_sha.json'
-HEADERS = {'Authorization': 'Bearer'}
+GITHUB_API_TOKEN = os.getenv("GITHUB_API_TOKEN")
+HEADERS = {'Authorization': f'Bearer {GITHUB_API_TOKEN}'}
 
 # Other constants
 UPDATE_INTERVAL_SECONDS = 300  # 5 minutes
@@ -50,17 +51,18 @@ def download_changed_file_and_update_file_hash(
     if filename in current_files and sha == current_files[filename]:
         return False
     if not is_git_url:
-        download_file(url, dirname)
+        succeeded = download_file(url, dirname)
     else:
-        download_file_from_git_url(url, os.path.join(dirname, filename))
-    current_files[filename] = sha
-    return True
+        succeeded = download_file_from_git_url(url, os.path.join(dirname, filename))
+    if succeeded:
+        current_files[filename] = sha
+    return succeeded
 
 
 # Return true if there are any updates.
 def fetch_repository_info(content_fetch_url: str, dirname: str, recursive: bool = False) -> bool:
     current_files = load_file_hash()
-    response = requests.get(content_fetch_url)
+    response = requests.get(content_fetch_url, headers=HEADERS)
     dirname = os.path.join(ROOT_PATH, dirname)
     has_udpate = False
     if response.status_code != 200:
@@ -74,7 +76,7 @@ def fetch_repository_info(content_fetch_url: str, dirname: str, recursive: bool 
                 filename, dirname, entry['sha'], entry['download_url'], current_files) or has_udpate
         if entry['type'] == 'dir' and recursive:
             git_tree_url = entry['git_url'] + '?recursive=true'
-            tree_response = requests.get(git_tree_url)
+            tree_response = requests.get(git_tree_url, headers=HEADERS)
             if tree_response.status_code != 200:
                 continue
             sub_dirname = os.path.join(dirname, filename)
@@ -114,7 +116,7 @@ def main() -> None:
 
         if has_story_data_update:
             print('Writing story data to MongoDB.')
-
+            write_story_data_to_db()
             print('Story data written to db.')
 
         time.sleep(UPDATE_INTERVAL_SECONDS)

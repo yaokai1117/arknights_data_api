@@ -3,14 +3,13 @@ import sys  # nopep8
 ROOT_PATH = os.path.join(os.path.dirname(__file__), '..')  # nopep8
 sys.path.append(ROOT_PATH)  # nopep8
 
+from itertools import chain
 from utils.mongo_client import MongoClient
-from per_table_data_cleaning import filename_to_process_func, DataProcessingContext
-from data_cleaning import process_table_data
+from data_processing.table_data_cleaning import process_table_data, filename_to_process_func, DataProcessingContext
+from data_processing.story_data_cleaning import process_story_data
 import json
 
 TABLE_DATA_DIR_NAME = 'data/table'
-
-# Directory containing the table data files
 table_data_dirname = os.path.join(ROOT_PATH, TABLE_DATA_DIR_NAME)
 
 # List of table data file names (without the .json extension) to be stored to MongoDB.
@@ -49,5 +48,37 @@ def write_table_data_to_db() -> None:
     mongo_client.close()
 
 
+STORY_DATA_DIR_NAME = 'data/story'
+story_data_dirname = os.path.join(ROOT_PATH, STORY_DATA_DIR_NAME)
+activities_dirname = os.path.join(story_data_dirname, 'activities')
+mainline_dirname = os.path.join(story_data_dirname, 'obt/main')
+memory_dirname = os.path.join(story_data_dirname, 'obt/memory')
+
+def write_story_data_to_db() -> None:
+    mongo_client = MongoClient()
+    mongo_client.create_or_replace_collection('story', {})
+    story_collection = mongo_client.db['story']
+
+    for root, dirnames, filenames in chain(os.walk(activities_dirname), os.walk(mainline_dirname)):
+        for filename in filenames:
+            path = os.path.join(root, filename)
+            with open(path, 'r', encoding='utf-8') as json_file:
+                data = process_story_data(json.load(json_file))
+                story_collection.insert_many(data)
+                print(f'Update stroty db with data from: {filename}')
+
+    for root, dirnames, filenames in os.walk(memory_dirname):
+        for filename in filenames:
+            path = os.path.join(root, filename)
+            with open(path, 'r', encoding='utf-8') as json_file:
+                data = process_story_data(json.load(json_file), event_type='MEMORY')
+                story_collection.insert_many(data)
+                print(f'Update stroty db with data from: {filename}')
+
+    mongo_client.close()
+
+
+
 if __name__ == '__main__':
-    write_table_data_to_db()
+    # write_table_data_to_db()
+    write_story_data_to_db()
