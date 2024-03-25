@@ -1,4 +1,4 @@
-## arknights_data_api
+## arknights_data_api 明日方舟游戏数据GraphQL API
 
 A [GraphQL](https://graphql.org/) interface for [Arknights game data](https://github.com/Kengxxiao/ArknightsGameData). 
 
